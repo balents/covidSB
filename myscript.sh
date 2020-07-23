@@ -1,4 +1,7 @@
 #!/bin/bash
 python3 scrape-plots-file.py
-echo "done"
+git add .
+git commit -m "update by myscript.sh"
+git push origin master
+
 
