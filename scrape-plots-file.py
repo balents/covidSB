@@ -1,3 +1,4 @@
+print("starting script")
 import requests
 import urllib.request
 import time
