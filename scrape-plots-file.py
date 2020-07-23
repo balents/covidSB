@@ -1,4 +1,6 @@
 print("starting script")
+import sys
+print(sys.version)
 import requests
 import urllib.request
 import time
