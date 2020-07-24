@@ -19,9 +19,8 @@ soup = BeautifulSoup(response.text, "html.parser")
 
 allits=soup.find_all("div",class_="elementor-accordion-item")
 datetimes = []
-totalcases = []
-totaldaily = []
-daybeforestart = datetime(2020, 5, 11)
+cases = []
+daybeforestart = datetime(2020, 4, 26)
 for item in allits:
     phrase = item.find("a",class_="elementor-accordion-title").text
     date = phrase.split(" as of ")[0]
@@ -31,46 +30,41 @@ for item in allits:
     if len(rows)>0:
         for (rnum,row) in enumerate(rows):
             first = row.find("strong")
-            coltot=999
-            colday=999
             if first != None: 
                 if "Geographic Area" in first.text: 
                     headers = row.find_all("td")
                     for (ii,ss) in enumerate(headers):
                         name = ss.find("strong").text               
-                        if ("Cases" in name) and ("Confirmed" in name):
-                            coltot=ii
-                        if ("Cases" in name) and ("Daily" in name):
-                            colday=ii
-                if coltot<999 and colday<999:
-                    lastrow = rnum
-                    break
-        for rr in range(lastrow+1,len(rows)):
+                        if ("Cases" in name) and ("Confirmed" in name): break
+                    if ii+1<len(headers): 
+                        column = ii
+                        break
+        for rr in range(rnum+1,len(rows)):
             row = rows[rr]
             place = row.find("td").find("strong").text
             if place == 'CITY OF SANTA BARBARA':
                 tds = row.find_all("td")
-                ntot=int(tds[coltot].find("strong").text)
-                nday=int(tds[colday].find("strong").text)
+                number=int(tds[column].find("strong").text)
                 break
         datetimes.append(date_object)
-        totalcases.append(ntot)
-        totaldaily.append(nday)
+        cases.append(number)
 dates = matplotlib.dates.date2num(datetimes)
 formatter = DateFormatter('%m/%d/%y')
 matplotlib.style.use('seaborn')
 fig, (ax1,ax2) = plt.subplots(1,2)
-ax1.plot_date(datetimes, totalcases,linestyle='solid')
+ax1.plot_date(datetimes, cases,linestyle='solid')
 ax1.set_ylabel('Cases')
 ax1.xaxis.set_major_formatter(formatter)
 ax1.xaxis.set_tick_params(rotation=30, labelsize=10)
 
 
 avg = []
-max = len(totaldaily)-7
+max = len(cases)-7
 for i in range(0,max):
-    diff = sum(totaldaily[i:i+7])
-    average = diff/7.0
+    diff = cases[i]-cases[i+7]
+    duration = datetimes[i]-datetimes[i+7]
+    days = duration.days
+    average = diff/days
     avg.append(average)
 truncateddates = matplotlib.dates.date2num(datetimes[:-7])
 formatter = DateFormatter('%m/%d/%y')
