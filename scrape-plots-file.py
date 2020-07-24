@@ -79,6 +79,7 @@ ax2.plot_date(truncateddates, avg,linestyle='solid')
 ax2.set_ylabel('Daily cases 7 sample average')
 ax2.xaxis.set_major_formatter(formatter)
 ax2.xaxis.set_tick_params(rotation=30, labelsize=10)
-fig.suptitle('City of Santa Barbara data as of '+datetimes[0].strftime("%A, %d %b %Y"))
+now=datetime.now().strftime('%H:%M on %A, %d %b %Y')
+fig.suptitle('City of Santa Barbara data as of '+datetimes[0].strftime("%A, %d %b %Y")+'\n data extracted as of '+now)
 fig.savefig('./graphs.png',bbox_inches='tight')
 
