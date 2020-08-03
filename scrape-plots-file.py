@@ -24,7 +24,7 @@ totaldaily = []
 daybeforestart = datetime(2020, 5, 11)
 for item in allits:
     phrase = item.find("a",class_="elementor-accordion-title").text
-    date = phrase.split(" as of ")[0]
+    date = ' '.join(phrase.split()[:3])
     date_object = datetime.strptime(date, "%B %d, %Y")
     if date_object < daybeforestart: break
     rows = item.find_all("tr")
